@@ -4,6 +4,8 @@ For a quick start guide on how to use the template in this repo, please referenc
 
 For other documentation needs such as FortiAnalyzer administration and additional use cases, please reference [**docs.fortinet.com**](https://docs.fortinet.com/). 
 
+
+
 ## Support
 
 Fortinet-provided scripts in this and other GitHub projects do not fall under the regular Fortinet technical support scope and are not supported by FortiCare Support Services.
