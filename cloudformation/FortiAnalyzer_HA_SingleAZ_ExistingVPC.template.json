@@ -1,6 +1,6 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "(v8.7) AWS CFT to deploy a FortiAnalyzer HA pair into an existing VPC",
+	"Description": "(v9.0) AWS CFT to deploy a FortiAnalyzer HA pair into an existing VPC",
 	"Metadata": {
 		"AWS::CloudFormation::Interface": {
 			"ParameterGroups": [
@@ -73,33 +73,33 @@
 			"Type": "String",
 			"Default": "10.1.0.0/16",
 			"Description": "Provide a network CIDR for the VPC",
-			"AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]){1}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$",
-			"ConstraintDescription": "must be a valid CIDR block format."
+			"AllowedPattern": "(\\d{1,3}\\.){3}\\d{1,3}/\\d{1,2}",
+			"ConstraintDescription": "Must be a valid CIDR block format."
 		},
 		"PublicOrPrivateSubnet": {
 			"Type": "AWS::EC2::Subnet::Id",
-			"Description": "Select the subnet for PublicOrPrivateSubnet2"
+			"Description": "Select the subnet for PublicOrPrivateSubnet"
 		},
 		"FortiAnalyzer1PrimaryIP": {
 			"Type": "String",
 			"Default": "10.1.1.10/24",
 			"Description": "Provide the primary IP address in CIDR form for FortiAnalyzer1 to use (IP from PublicOrPrivateSubnet1)",
-			"AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]){1}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$",
-			"ConstraintDescription": "must be a valid CIDR block format."
+			"AllowedPattern": "(\\d{1,3}\\.){3}\\d{1,3}/\\d{1,2}",
+			"ConstraintDescription": "Must be a valid CIDR block format."
 		},
 		"FortiAnalyzer2PrimaryIP": {
 			"Type": "String",
 			"Default": "10.1.1.11/24",
 			"Description": "Provide the primary IP address in CIDR form for FortiAnalyzer2 to use (IP from PublicOrPrivateSubnet2)",
-			"AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]){1}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$",
-			"ConstraintDescription": "must be a valid CIDR block format."
+			"AllowedPattern": "(\\d{1,3}\\.){3}\\d{1,3}/\\d{1,2}",
+			"ConstraintDescription": "Must be a valid CIDR block format."
 		},
 		"ClusterIP": {
 			"Type": "String",
 			"Default": "10.1.1.12/24",
 			"Description": "Provide the secondary IP address in CIDR form for the Cluster to use (IP from PublicOrPrivateSubnet1)",
-			"AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]){1}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$",
-			"ConstraintDescription": "must be a valid CIDR block format."
+			"AllowedPattern": "(\\d{1,3}\\.){3}\\d{1,3}/\\d{1,2}",
+			"ConstraintDescription": "Must be a valid CIDR block format."
 		},
 		"PubliclyAvailable": {
 			"Type": "String",
@@ -159,7 +159,9 @@
 		"CIDRForInstanceAccess": {
 			"Type": "String",
 			"Default": "0.0.0.0/0",
-			"Description": "Provide a network CIDR from which the FortiAnalyzer instances will be accessed"
+			"Description": "Provide a network CIDR from which the FortiAnalyzer instances will be accessed",
+			"AllowedPattern": "(\\d{1,3}\\.){3}\\d{1,3}/\\d{1,2}",
+			"ConstraintDescription": "Must be a valid CIDR block format."
 		},
 		"KeyPair": {
 			"Type": "AWS::EC2::KeyPair::KeyName",
@@ -179,10 +181,9 @@
 		},
 		"FortiAnalyzerVersion": {
 			"Type": "String",
-			"Default": "7.4.x",
+			"Default": "7.6.x",
 			"Description": "Select the verion of FortiAnalyzer to use (latest GA AMI will be used)",
 			"AllowedValues": [
-				"7.2.x",
 				"7.4.x",
 				"7.6.x"
 			]
@@ -226,15 +227,6 @@
 	},
 	"Mappings": {
 		"FortiAnalyzerAMISearchString": {
-			"7.2.x": {
-				"BYOL": "FortiAnalyzer-VM64-AWS *(7.2.*)*|9ipdy7tpkp24kmfsjgfuymny1",
-				"Flex": "FortiAnalyzer-VM64-AWS *(7.2.*)*|9ipdy7tpkp24kmfsjgfuymny1",
-				"PAYG2Devices": "FortiAnalyzer-VM64-AWSONDEMAND *(7.2.*)*|9dtuu71e8jl604ce11efi1mzo",
-				"PAYG10Devices": "FortiAnalyzer-VM64-AWSONDEMAND *(7.2.*)*|5fjrlla50pzzq1c8064gnm11n",
-				"PAYG30Devices": "FortiAnalyzer-VM64-AWSONDEMAND *(7.2.*)*|f260v7j9fwdvlcsbnpsjpaozc",
-				"PAYG100Devices": "FortiAnalyzer-VM64-AWSONDEMAND *(7.2.*)*|3nlrca0hphlsq7bl6v99smx10",
-				"PAYG500Devices": "FortiAnalyzer-VM64-AWSONDEMAND *(7.2.*)*|dlwisgg79vzzo3zeommthp0zv"
-			},
 			"7.4.x": {
 				"BYOL": "FortiAnalyzer-VM64-AWS *(7.4.*)*|9ipdy7tpkp24kmfsjgfuymny1",
 				"Flex": "FortiAnalyzer-VM64-AWS *(7.4.*)*|9ipdy7tpkp24kmfsjgfuymny1",
@@ -630,15 +622,7 @@
 					{
 						"Key": "Name",
 						"Value": {
-							"Fn::Join": [
-								"",
-								[
-									{
-										"Ref": "AWS::StackName"
-									},
-									"-FortiAnalyzer1"
-								]
-							]
+							"Fn::Sub": "${AWS::StackName}-FortiAnalyzer1"
 						}
 					}
 				],
@@ -647,42 +631,7 @@
 						"Fn::If": [
 							"BYOL",
 							{
-								"Fn::Join": [
-									"",
-									[
-										"{\n",
-										"\"bucket\"",
-										" : \"",
-										{
-											"Ref": "InitS3Bucket"
-										},
-										"\"",
-										",\n",
-										"\"region\"",
-										" : ",
-										"\"",
-										{
-											"Ref": "AWS::Region"
-										},
-										"\"",
-										",\n",
-										"\"license\"",
-										" : ",
-										"\"",
-										"/",
-										{
-											"Ref": "FortiAnalyzer1LicenseFile"
-										},
-										"\"",
-										",\n",
-										"\"config\"",
-										" : ",
-										"\"",
-										"/faz1-config.txt\"",
-										"\n",
-										"}"
-									]
-								]
+								"Fn::Sub": "{\"bucket\":\"${InitS3Bucket}\",\"region\":\"${AWS::Region}\",\"license\":\"/${FortiAnalyzer1LicenseFile}\",\"config\":\"/faz1-config.txt\"}"
 							},
 							{
 								"Fn::Join": [
@@ -837,7 +786,22 @@
 										"set group-id 1",
 										"set group-name Group1",
 										"set hb-interface port1",
+										"set initial-sync disable",
+										{
+											"Fn::Join": [
+												"",
+												[
+													"set password ",
+													{
+														"Fn::Base64": {
+															"Ref": "AWS::AccountId"
+														}
+													}
+												]
+											]
+										},
 										"set preferred-role primary",
+										"set priority 120",
 										"config peer",
 										"edit 1",
 										{
@@ -946,15 +910,7 @@
 					{
 						"Key": "Name",
 						"Value": {
-							"Fn::Join": [
-								"",
-								[
-									{
-										"Ref": "AWS::StackName"
-									},
-									"-faz1eni0"
-								]
-							]
+							"Fn::Sub": "${AWS::StackName}-faz1eni0"
 						}
 					},
 					{
@@ -1023,15 +979,7 @@
 					{
 						"Key": "Name",
 						"Value": {
-							"Fn::Join": [
-								"",
-								[
-									{
-										"Ref": "AWS::StackName"
-									},
-									"-FortiAnalyzer1"
-								]
-							]
+							"Fn::Sub": "${AWS::StackName}-FortiAnalyzer1"
 						}
 					}
 				]
@@ -1079,15 +1027,7 @@
 					{
 						"Key": "Name",
 						"Value": {
-							"Fn::Join": [
-								"",
-								[
-									{
-										"Ref": "AWS::StackName"
-									},
-									"-FortiAnalyzerCluster"
-								]
-							]
+							"Fn::Sub": "${AWS::StackName}-FortiAnalyzerCluster"
 						}
 					}
 				]
@@ -1180,15 +1120,7 @@
 					{
 						"Key": "Name",
 						"Value": {
-							"Fn::Join": [
-								"",
-								[
-									{
-										"Ref": "AWS::StackName"
-									},
-									"-FortiAnalyzer2"
-								]
-							]
+							"Fn::Sub": "${AWS::StackName}-FortiAnalyzer2"
 						}
 					}
 				],
@@ -1197,42 +1129,7 @@
 						"Fn::If": [
 							"BYOL",
 							{
-								"Fn::Join": [
-									"",
-									[
-										"{\n",
-										"\"bucket\"",
-										" : \"",
-										{
-											"Ref": "InitS3Bucket"
-										},
-										"\"",
-										",\n",
-										"\"region\"",
-										" : ",
-										"\"",
-										{
-											"Ref": "AWS::Region"
-										},
-										"\"",
-										",\n",
-										"\"license\"",
-										" : ",
-										"\"",
-										"/",
-										{
-											"Ref": "FortiAnalyzer2LicenseFile"
-										},
-										"\"",
-										",\n",
-										"\"config\"",
-										" : ",
-										"\"",
-										"/faz2-config.txt\"",
-										"\n",
-										"}"
-									]
-								]
+								"Fn::Sub": "{\"bucket\":\"${InitS3Bucket}\",\"region\":\"${AWS::Region}\",\"license\":\"/${FortiAnalyzer2LicenseFile}\",\"config\":\"/faz2-config.txt\"}"
 							},
 							{
 								"Fn::Join": [
@@ -1387,7 +1284,22 @@
 										"set group-id 1",
 										"set group-name Group1",
 										"set hb-interface port1",
+										"set initial-sync enable",
+										{
+											"Fn::Join": [
+												"",
+												[
+													"set password ",
+													{
+														"Fn::Base64": {
+															"Ref": "AWS::AccountId"
+														}
+													}
+												]
+											]
+										},
 										"set preferred-role secondary",
+										"set priority 100",
 										"config peer",
 										"edit 1",
 										{
@@ -1496,15 +1408,7 @@
 					{
 						"Key": "Name",
 						"Value": {
-							"Fn::Join": [
-								"",
-								[
-									{
-										"Ref": "AWS::StackName"
-									},
-									"-faz2eni0"
-								]
-							]
+							"Fn::Sub": "${AWS::StackName}-faz2eni0"
 						}
 					},
 					{
@@ -1557,15 +1461,7 @@
 					{
 						"Key": "Name",
 						"Value": {
-							"Fn::Join": [
-								"",
-								[
-									{
-										"Ref": "AWS::StackName"
-									},
-									"-FortiAnalyzer2"
-								]
-							]
+							"Fn::Sub": "${AWS::StackName}-FortiAnalyzer2"
 						}
 					}
 				]
@@ -1921,7 +1817,10 @@
 								"set group-id 1",
 								"set group-name Group1",
 								"set hb-interface port1",
+								"set initial-sync {InitialSync}",
+								"set password {HaPassword}",
 								"set preferred-role {Role}",
+								"set priority {Priority}",
 								"config peer",
 								"edit 1",
 								"set addr {HaPeerIp}",
@@ -2004,7 +1903,7 @@
 				},
 				"Timeout": 120,
 				"Handler": "index.handler",
-				"Runtime": "python3.9",
+				"Runtime": "python3.12",
 				"MemorySize": 128
 			}
 		},
@@ -2040,6 +1939,23 @@
 							},
 							"',",
 							"'Role':'primary',",
+							"'Priority':'120',",
+							"'InitialSync':'disable',",
+							"'HaPassword':',",
+							{
+								"Fn::Join": [
+									"",
+									[
+										"set password ",
+										{
+											"Fn::Base64": {
+												"Ref": "AWS::AccountId"
+											}
+										}
+									]
+								]
+							},
+							"',",
 							"'HaPeerIp':'",
 							{
 								"Fn::Select": [
@@ -2098,6 +2014,23 @@
 							},
 							"',",
 							"'Role':'secondary',",
+							"'Priority':'100',",
+							"'InitialSync':'enable',",
+							"'HaPassword':',",
+							{
+								"Fn::Join": [
+									"",
+									[
+										"set password ",
+										{
+											"Fn::Base64": {
+												"Ref": "AWS::AccountId"
+											}
+										}
+									]
+								]
+							},
+							"',",
 							"'HaPeerIp':'",
 							{
 								"Fn::Select": [
@@ -2151,11 +2084,10 @@
 		},
 		"FortiAnalyzer1LoginURL": {
 			"Value": {
-				"Fn::Join": [
-					"",
-					[
-						"https://",
-						{
+				"Fn::Sub": [
+					"https://${IP}",
+					{
+						"IP": {
 							"Fn::If": [
 								"CreateEIP",
 								{
@@ -2169,18 +2101,17 @@
 								}
 							]
 						}
-					]
+					}
 				]
 			},
 			"Description": "Login URL for FortiAnalyzer1"
 		},
 		"FortiAnalyzer2LoginURL": {
 			"Value": {
-				"Fn::Join": [
-					"",
-					[
-						"https://",
-						{
+				"Fn::Sub": [
+					"https://${IP}",
+					{
+						"IP": {
 							"Fn::If": [
 								"CreateEIP",
 								{
@@ -2194,18 +2125,17 @@
 								}
 							]
 						}
-					]
+					}
 				]
 			},
 			"Description": "Login URL for FortiAnalyzer2"
 		},
 		"ClusterLoginURL": {
 			"Value": {
-				"Fn::Join": [
-					"",
-					[
-						"https://",
-						{
+				"Fn::Sub": [
+					"https://${IP}",
+					{
+						"IP": {
 							"Fn::If": [
 								"CreateEIP",
 								{
@@ -2226,7 +2156,7 @@
 								}
 							]
 						}
-					]
+					}
 				]
 			},
 			"Description": "Login URL for Cluster"
