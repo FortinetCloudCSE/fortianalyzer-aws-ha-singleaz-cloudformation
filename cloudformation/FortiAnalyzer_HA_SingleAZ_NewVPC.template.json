@@ -1,6 +1,6 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
-	"Description": "(v9.1) AWS CFT to deploy a FortiAnalyzer HA pair into a new VPC",
+	"Description": "(v9.2) AWS CFT to deploy a FortiAnalyzer HA pair into a new VPC",
 	"Metadata": {
 		"AWS::CloudFormation::Interface": {
 			"ParameterGroups": [
@@ -1157,19 +1157,6 @@
 										"set group-name Group1",
 										"set hb-interface port1",
 										"set initial-sync disable",
-										{
-											"Fn::Join": [
-												"",
-												[
-													"set password ",
-													{
-														"Fn::Base64": {
-															"Ref": "AWS::AccountId"
-														}
-													}
-												]
-											]
-										},
 										"set preferred-role primary",
 										"set priority 120",
 										"config peer",
@@ -1652,19 +1639,6 @@
 										"set group-name Group1",
 										"set hb-interface port1",
 										"set initial-sync enable",
-										{
-											"Fn::Join": [
-												"",
-												[
-													"set password ",
-													{
-														"Fn::Base64": {
-															"Ref": "AWS::AccountId"
-														}
-													}
-												]
-											]
-										},
 										"set preferred-role secondary",
 										"set priority 100",
 										"config peer",
@@ -2183,7 +2157,6 @@
 								"set group-name Group1",
 								"set hb-interface port1",
 								"set initial-sync {InitialSync}",
-								"set password {HaPassword}",
 								"set preferred-role {Role}",
 								"set priority {Priority}",
 								"config peer",
@@ -2306,21 +2279,6 @@
 							"'Role':'primary',",
 							"'Priority':'120',",
 							"'InitialSync':'disable',",
-							"'HaPassword':',",
-							{
-								"Fn::Join": [
-									"",
-									[
-										"set password ",
-										{
-											"Fn::Base64": {
-												"Ref": "AWS::AccountId"
-											}
-										}
-									]
-								]
-							},
-							"',",
 							"'HaPeerIp':'",
 							{
 								"Fn::Select": [
@@ -2381,21 +2339,6 @@
 							"'Role':'secondary',",
 							"'Priority':'100',",
 							"'InitialSync':'enable',",
-							"'HaPassword':',",
-							{
-								"Fn::Join": [
-									"",
-									[
-										"set password ",
-										{
-											"Fn::Base64": {
-												"Ref": "AWS::AccountId"
-											}
-										}
-									]
-								]
-							},
-							"',",
 							"'HaPeerIp':'",
 							{
 								"Fn::Select": [
